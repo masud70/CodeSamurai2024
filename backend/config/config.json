@@ -1,0 +1,23 @@
+{
+	"development": {
+		"username": "root",
+		"password": "CU_CODECONQUEST",
+		"database": "cu_codeconquest",
+		"host": "mysqldb",
+		"dialect": "mysql"
+	},
+	"test": {
+		"username": "root",
+		"password": "CU_CODECONQUEST",
+		"database": "cu_codeconquest",
+		"host": "mysqldb",
+		"dialect": "mysql"
+	},
+	"production": {
+		"username": "root",
+		"password": "CU_CODECONQUEST",
+		"database": "cu_codeconquest",
+		"host": "mysqldb",
+		"dialect": "mysql"
+	}
+}
