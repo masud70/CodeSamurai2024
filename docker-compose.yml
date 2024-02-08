@@ -4,7 +4,7 @@ services:
     mysqldb:
         image: mysql:8.0.36
         restart: unless-stopped
-        env_file: ./.env
+        container_name: "mysqldb"
         environment:
             - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
             - MYSQL_DATABASE=$MYSQLDB_DATABASE
@@ -12,9 +12,12 @@ services:
             - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
         volumes:
             - db:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            timeout: 10s
+            retries: 10
+
     app:
-        depends_on:
-            - mysqldb
         build: ./backend
         restart: unless-stopped
         env_file: ./.env
@@ -26,6 +29,9 @@ services:
             - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
             - DB_NAME=$MYSQLDB_DATABASE
             - DB_PORT=$MYSQLDB_DOCKER_PORT
+        depends_on:
+            mysqldb:
+                condition: service_healthy
         stdin_open: true
         tty: true
 

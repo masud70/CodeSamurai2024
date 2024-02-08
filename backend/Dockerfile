@@ -1,6 +1,6 @@
 FROM node:20.11.0
 
-WORKDIR /app
+WORKDIR /backend
 
 COPY package*.json .
 
@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 8000
 
-CMD npm run dev
+CMD ["npm", "run", "dev"]

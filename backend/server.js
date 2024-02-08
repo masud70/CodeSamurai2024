@@ -6,7 +6,7 @@ const { addPoint, centerOfGravity } = require("./controllers/Problem1");
 const { isAnyPointExistCheck } = require("./middlewares/Mock");
 const app = express();
 
-const PORT = process.env.NODE_DOCKER_PORT || 5000;
+const PORT = process.env.NODE_DOCKER_PORT || 8000;
 var corsOptions = {
 	origin: "*",
 };
@@ -36,12 +36,7 @@ app.listen(PORT, () => {
 	db.sequelize
 		.sync({ alter: true })
 		.then(() => {
-			console.log(
-				`================================
-App listening to port ${PORT}
-Database connection successfully
-================================`
-			);
+			console.log(`App listening to port ${PORT}`);
 		})
 		.catch((err) => {
 			console.log(err.message);
