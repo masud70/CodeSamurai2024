@@ -101,30 +101,6 @@ module.exports = {
 			};
 		}
 	},
-
-	getWallet: async ({ wallet_id }) => {
-		try {
-			const response = await db.User.findByPk(wallet_id);
-			if (response) {
-				return {
-					status: true,
-					data: {
-						"wallet_id": response.user_id,
-						"balance": response.balance,
-						"wallet_user": {
-							"user_id": response.user_id,
-							"user_name": response.user_name
-						}
-					}
-				}
-			}
-		} catch (error) {
-			return {
-				status: false,
-				message: error.message,
-			};
-		}
-	},
 	getAllStations: async () => {
 		try {
 			const response = await db.Station.findAll();
@@ -149,8 +125,8 @@ module.exports = {
 			const response = await db.Stop.findAll({
 				where: { station_id },
 				order: [
-					['departure_time', 'ASC', 'NULLS FIRST'],
-					['arrival_time', 'ASC', 'NULLS FIRST']
+					['departure_time', 'ASC'],
+					['arrival_time', 'ASC']
 				]
 			});
 			if (response && response.length > 0) {
@@ -164,8 +140,8 @@ module.exports = {
 					return {
 						status: true,
 						data: {
-							"station_id": station_id,
-							"trains": []
+							station_id: response.station_id,
+							trains: []
 						},
 					};
 				} else {
