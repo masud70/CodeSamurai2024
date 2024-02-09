@@ -73,7 +73,7 @@ module.exports = {
 							arrival_time: stop.arrival_time,
 							departure_time: stop.departure_time,
 							fare: stop.fare,
-							trainId: response.train_id,
+							train_id: response.train_id,
 						}))
 					) {
 						throw new Error(
@@ -102,6 +102,7 @@ module.exports = {
 		}
 	},
 
+<<<<<<< HEAD
 	getWallet: async ({ wallet_id }) => {
 		try {
 			const response = await db.User.findByPk(wallet_id);
@@ -117,6 +118,18 @@ module.exports = {
 						}
 					}
 				}
+=======
+	getAllStations: async () => {
+		try {
+			const response = await db.Station.findAll();
+			if (response) {
+				return {
+					status: true,
+					data: response,
+				};
+			} else {
+				throw new Error("There was an error.");
+>>>>>>> 793ec449f1d283a9392805668e566e80e590e12f
 			}
 		} catch (error) {
 			return {
@@ -124,5 +137,28 @@ module.exports = {
 				message: error.message,
 			};
 		}
+<<<<<<< HEAD
 	}
+=======
+	},
+
+	getAllTrains: async ({ station_id }) => {
+		try {
+			const response = await db.Stop.findAll({ where: { station_id } });
+			if (response && response.length > 0) {
+				return {
+					status: true,
+					data: response,
+				};
+			} else {
+				throw new Error(`station with id: ${station_id} was not found`);
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
+>>>>>>> 793ec449f1d283a9392805668e566e80e590e12f
 };
