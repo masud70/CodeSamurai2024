@@ -179,4 +179,79 @@ module.exports = {
 			};
 		}
 	},
+
+	getWalletBalance: async ({ wallet_id }) => {
+		try {
+			const response = await db.User.findByPk(wallet_id);
+			if (response) {
+				return {
+					status: true,
+					data: {
+						wallet_id: response.user_id,
+						wallet_balance: response.balance,
+						wallet_user: {
+							user_id: response.user_id,
+							user_name: response.user_name,
+						},
+					},
+				};
+			} else {
+				throw new Error(`wallet with id: ${wallet_id} was not found`);
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
+
+	addWalletBalance: async ({ recharge, user_id }) => {
+		try {
+			const response = await db.User.increment(
+				{ balance: recharge },
+				{ where: { user_id } }
+			);
+			const updated = await db.User.findByPk(user_id);
+			if (response && updated) {
+				return {
+					status: true,
+					data: {
+						wallet_id: updated.user_id,
+						wallet_balance: updated.balance,
+						wallet_user: {
+							user_id: updated.user_id,
+							user_name: updated.user_name,
+						},
+					},
+				};
+			} else {
+				throw new Error(`wallet with id: ${user_id} was not found`);
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
+
+	purchaseTicket: async ({ info }) => {
+		try {
+			let flag = true;
+			if (flag) {
+				return {
+					status: true,
+					message: "Welcome to CU_CODECONQUEST,",
+				};
+			} else {
+				throw new Error("There was an error.");
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
 };

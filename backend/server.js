@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./models");
-const { checkValidity } = require("./middlewares");
+const { checkValidity, checkAmount } = require("./middlewares");
 const {
 	welcome,
 	addUser,
@@ -10,6 +10,8 @@ const {
 	addTrain,
 	getAllStations,
 	getAllTrains,
+	getWalletBalance,
+	addWalletBalance,
 } = require("./controllers");
 const app = express();
 
@@ -122,6 +124,47 @@ app.get("/api/stations/:id/trains", async (req, res) => {
 			message: error.message,
 		});
 	}
+});
+
+app.get("/api/wallets/:id", async (req, res) => {
+	try {
+		const wallet_id = req.params.id;
+		console.log("Param: ", wallet_id);
+		const result = await getWalletBalance({ wallet_id });
+		console.log(result);
+		if (result.status) {
+			res.status(200).json({ trains: result.data });
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.status(404).json({
+			message: error.message,
+		});
+	}
+});
+
+app.put("/api/wallets/:id", checkAmount, async (req, res) => {
+	try {
+		const user_id = req.params.id;
+		console.log("Param: ", user_id);
+		console.log("Data: ", req.body);
+		const result = await addWalletBalance({ user_id, ...req.body });
+		console.log(result);
+		if (result.status) {
+			res.status(200).json(result.data);
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.status(404).json({
+			message: error.message,
+		});
+	}
+});
+
+app.use((err, req, res, next) => {
+	res.json({ message: err });
 });
 
 // listen for requests
