@@ -1,9 +1,9 @@
 {
 	"development": {
 		"username": "root",
-		"password": "CU_CODECONQUEST",
+		"password": "root",
 		"database": "cu_codeconquest",
-		"host": "mysqldb",
+		"host": "localhost",
 		"dialect": "mysql"
 	},
 	"test": {

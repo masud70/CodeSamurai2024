@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./models");
-const { addPoint, centerOfGravity } = require("./controllers/Problem1");
-const { isAnyPointExistCheck } = require("./middlewares/Mock");
+const { checkValidity } = require("./middlewares");
+const { welcome } = require("./controllers");
 const app = express();
 
 const PORT = process.env.NODE_DOCKER_PORT || 8000;
@@ -16,19 +16,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // simple route
-app.get("/", (req, res) => {
-	res.json({ message: "Welcome to CU_CODECONQUEST." });
-});
-app.put("/p1", isAnyPointExistCheck, async (req, res) => {
-	console.log("Input: ", req.body);
-	const result = await addPoint({ point: req.body });
-	console.log("Output: ", result);
-	res.json(result);
-});
-app.get("/p2", async (req, res) => {
-	const response = await centerOfGravity();
-	console.log(response);
-	res.status(200).json(response.data || { x: 0, y: 0 });
+app.get("/", checkValidity, async (req, res) => {
+	try {
+		const result = await welcome();
+		res.status(200).json(result);
+	} catch (error) {
+		res.status(500).json({
+			status: false,
+			message: error.message,
+		});
+	}
 });
 
 // listen for requests
