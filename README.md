@@ -1,10 +1,18 @@
 # Code Samurai 2024 (Team CU_CODECONQUEST)
 
+| Index              |  Value                     |
+|--------------------|:--------------------------:|
+| Team Name          |  CU_CODECONQUEST           |
+| Institute          |  University of Chittagong  |
+
+
 ## Team Members
 
-- Md. Masud Mazumder (Email: mdmasud.csecu@gmail.com)
-- Atanu Kumar Dey (Email: To be added)
-- Tonmoy Chandro Das (Email: To be added)
+|  Team Member         |  Email                    |
+|----------------------|:-------------------------:|
+|  Md. Masud Mazumder  |  mdmasud.csecu@gmail.com  |
+|  Atanu Kumar Dey     |  atanudey2153@gmail.com   |
+|  Tonmoy Chandro Das  |  To be added              |
 
 ## Run the System
 
