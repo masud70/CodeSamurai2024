@@ -3,7 +3,7 @@
 ## Team Members
 
 - Md. Masud Mazumder (Email: mdmasud.csecu@gmail.com)
-- Atanu Kumar Dey (Email: To be added)
+- Atanu Kumar Dey (Email: atanudey2153@gmail.com)
 - Tonmoy Chandro Das (Email: To be added)
 
 ## Run the System
