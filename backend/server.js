@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./models");
 const { checkValidity } = require("./middlewares");
-const { welcome, addUser } = require("./controllers");
+const { welcome, addUser, addStation, addTrain } = require("./controllers");
 const app = express();
 
 const PORT = process.env.NODE_DOCKER_PORT || 8000;
@@ -32,6 +32,42 @@ app.post("/api/users", async (req, res) => {
 	try {
 		console.log(req.body);
 		const result = await addUser({ user: req.body });
+		console.log(result);
+		if (result.status) {
+			res.status(201).json(result.data);
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.json({
+			status: false,
+			message: error.message,
+		});
+	}
+});
+
+app.post("/api/stations", async (req, res) => {
+	try {
+		console.log(req.body);
+		const result = await addStation({ station: req.body });
+		console.log(result);
+		if (result.status) {
+			res.status(201).json(result.data);
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.json({
+			status: false,
+			message: error.message,
+		});
+	}
+});
+
+app.post("/api/trains", async (req, res) => {
+	try {
+		console.log(req.body);
+		const result = await addTrain({ train: req.body });
 		console.log(result);
 		if (result.status) {
 			res.status(201).json(result.data);
