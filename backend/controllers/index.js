@@ -19,4 +19,24 @@ module.exports = {
 			};
 		}
 	},
+
+	addUser: async ({ user }) => {
+		try {
+			console.log("Data: ",user);
+			const response = await db.User.create(user);
+			if (response) {
+				return {
+					status: true,
+					data: response,
+				};
+			} else {
+				throw new Error("There was an error.");
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
 };
