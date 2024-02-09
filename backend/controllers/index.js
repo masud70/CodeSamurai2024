@@ -102,7 +102,6 @@ module.exports = {
 		}
 	},
 
-<<<<<<< HEAD
 	getWallet: async ({ wallet_id }) => {
 		try {
 			const response = await db.User.findByPk(wallet_id);
@@ -118,7 +117,14 @@ module.exports = {
 						}
 					}
 				}
-=======
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
 	getAllStations: async () => {
 		try {
 			const response = await db.Station.findAll();
@@ -129,7 +135,6 @@ module.exports = {
 				};
 			} else {
 				throw new Error("There was an error.");
->>>>>>> 793ec449f1d283a9392805668e566e80e590e12f
 			}
 		} catch (error) {
 			return {
@@ -137,9 +142,6 @@ module.exports = {
 				message: error.message,
 			};
 		}
-<<<<<<< HEAD
-	}
-=======
 	},
 
 	getAllTrains: async ({ station_id }) => {
@@ -160,5 +162,4 @@ module.exports = {
 			};
 		}
 	},
->>>>>>> 793ec449f1d283a9392805668e566e80e590e12f
 };
