@@ -146,14 +146,31 @@ module.exports = {
 
 	getAllTrains: async ({ station_id }) => {
 		try {
-			const response = await db.Stop.findAll({ where: { station_id } });
+			const response = await db.Stop.findAll({
+				where: { station_id },
+				order: [
+					['departure_time', 'ASC', 'NULLS FIRST'],
+					['arrival_time', 'ASC', 'NULLS FIRST']
+				]
+			});
 			if (response && response.length > 0) {
 				return {
 					status: true,
 					data: response,
 				};
 			} else {
-				throw new Error(`station with id: ${station_id} was not found`);
+				const response = await db.Station.findByPk(station_id);
+				if (response) {
+					return {
+						status: true,
+						data: {
+							"station_id": station_id,
+							"trains": []
+						},
+					};
+				} else {
+					throw new Error(`station with id: ${station_id} was not found`);
+				}
 			}
 		} catch (error) {
 			return {
