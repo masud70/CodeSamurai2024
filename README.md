@@ -10,7 +10,12 @@
 
 We can easily run the whole with only a single command:
 ```bash
-docker compose up
+docker compose up --build
+```
+
+To run in detached mode run the command:
+```bash
+docker compose up -d --build
 ```
 
 ## Stop the System

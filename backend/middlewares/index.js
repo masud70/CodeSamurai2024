@@ -6,7 +6,7 @@ module.exports = {
 				await new Promise(() =>
 					setTimeout(() => {
 						next();
-					}, 5000)
+					}, 1000)
 				);
 				next("Error 505.");
 			} else {
