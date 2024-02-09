@@ -73,7 +73,7 @@ module.exports = {
 							arrival_time: stop.arrival_time,
 							departure_time: stop.departure_time,
 							fare: stop.fare,
-							trainId: response.train_id,
+							train_id: response.train_id,
 						}))
 					) {
 						throw new Error(
@@ -93,6 +93,44 @@ module.exports = {
 				};
 			} else {
 				throw new Error("There was an error to add train data.");
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
+
+	getAllStations: async () => {
+		try {
+			const response = await db.Station.findAll();
+			if (response) {
+				return {
+					status: true,
+					data: response,
+				};
+			} else {
+				throw new Error("There was an error.");
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
+
+	getAllTrains: async ({ station_id }) => {
+		try {
+			const response = await db.Stop.findAll({ where: { station_id } });
+			if (response && response.length > 0) {
+				return {
+					status: true,
+					data: response,
+				};
+			} else {
+				throw new Error(`station with id: ${station_id} was not found`);
 			}
 		} catch (error) {
 			return {

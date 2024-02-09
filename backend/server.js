@@ -3,7 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./models");
 const { checkValidity } = require("./middlewares");
-const { welcome, addUser, addStation, addTrain } = require("./controllers");
+const {
+	welcome,
+	addUser,
+	addStation,
+	addTrain,
+	getAllStations,
+	getAllTrains,
+} = require("./controllers");
 const app = express();
 
 const PORT = process.env.NODE_DOCKER_PORT || 8000;
@@ -77,6 +84,41 @@ app.post("/api/trains", async (req, res) => {
 	} catch (error) {
 		res.json({
 			status: false,
+			message: error.message,
+		});
+	}
+});
+
+app.get("/api/stations", async (req, res) => {
+	try {
+		const result = await getAllStations();
+		console.log(result);
+		if (result.status) {
+			res.status(200).json({ stations: result.data });
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.json({
+			status: false,
+			message: error.message,
+		});
+	}
+});
+
+app.get("/api/stations/:id/trains", async (req, res) => {
+	try {
+		const station_id = req.params.id;
+		console.log("Param: ", station_id);
+		const result = await getAllTrains({ station_id });
+		console.log(result);
+		if (result.status) {
+			res.status(200).json({ trains: result.data });
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.status(404).json({
 			message: error.message,
 		});
 	}
