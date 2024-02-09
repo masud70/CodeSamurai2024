@@ -102,6 +102,29 @@ module.exports = {
 		}
 	},
 
+	getWallet: async ({ wallet_id }) => {
+		try {
+			const response = await db.User.findByPk(wallet_id);
+			if (response) {
+				return {
+					status: true,
+					data: {
+						"wallet_id": response.user_id,
+						"balance": response.balance,
+						"wallet_user": {
+							"user_id": response.user_id,
+							"user_name": response.user_name
+						}
+					}
+				}
+			}
+		} catch (error) {
+			return {
+				status: false,
+				message: error.message,
+			};
+		}
+	},
 	getAllStations: async () => {
 		try {
 			const response = await db.Station.findAll();
