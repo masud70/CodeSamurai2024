@@ -114,7 +114,7 @@ app.get("/api/stations/:id/trains", async (req, res) => {
 		const station_id = req.params.id;
 		console.log("Param: ", station_id);
 		const result = await getAllTrains({ station_id });
-		console.log(result);
+		// console.log(result);
 		if (result.status) {
 			res.status(200).json(
 				result.data
