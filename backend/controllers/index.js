@@ -109,14 +109,14 @@ module.exports = {
 				return {
 					status: true,
 					data: {
-						"wallet_id": response.user_id,
-						"balance": response.balance,
-						"wallet_user": {
-							"user_id": response.user_id,
-							"user_name": response.user_name
-						}
-					}
-				}
+						wallet_id: response.user_id,
+						balance: response.balance,
+						wallet_user: {
+							user_id: response.user_id,
+							user_name: response.user_name,
+						},
+					},
+				};
 			}
 		} catch (error) {
 			return {
@@ -146,14 +146,36 @@ module.exports = {
 
 	getAllTrains: async ({ station_id }) => {
 		try {
-			const response = await db.Stop.findAll({ where: { station_id } });
+			const response = await db.Stop.findAll({
+				where: { station_id },
+				order: [
+					["departure_time", "ASC"],
+					["arrival_time", "ASC"],
+				],
+			});
 			if (response && response.length > 0) {
 				return {
 					status: true,
-					data: response,
+					data: {
+						station_id: parseInt(station_id),
+						trains: response,
+					},
 				};
 			} else {
-				throw new Error(`station with id: ${station_id} was not found`);
+				const response = await db.Station.findByPk(station_id);
+				if (response) {
+					return {
+						status: true,
+						data: {
+							station_id: response.station_id,
+							trains: [],
+						},
+					};
+				} else {
+					throw new Error(
+						`station with id: ${station_id} was not found`
+					);
+				}
 			}
 		} catch (error) {
 			return {
@@ -221,6 +243,31 @@ module.exports = {
 
 	purchaseTicket: async ({ info }) => {
 		try {
+			const trains = await db.Train.findAll({
+				include: [{ model: db.Stop }],
+			});
+
+			let stops = new Array(trains.length);
+			let i = 0;
+			trains.forEach((train) => {
+				let x = train.Stops.sort((a, b) => (a.id > b.id ? 1 : -1));
+				stops[i] = new Array(x.length);
+				for (let j = 0; j < x.length; j++) {
+					const obj = {
+						sid: x[j].dataValues.station_id,
+						fare: x[j].dataValues.fare,
+						s: x[j].dataValues.arrival_time,
+						e: x[j].dataValues.departure_time,
+					};
+					stops[i].push(obj);
+				}
+				i++;
+			});
+
+			const x = module.exports.shortestPath(stops, 1, 4);
+
+			console.log(x);
+
 			let flag = true;
 			if (flag) {
 				return {
@@ -236,5 +283,60 @@ module.exports = {
 				message: error.message,
 			};
 		}
+	},
+
+	shortestPath: (graph, start, end) => {
+		let distances = {};
+		let visited = {};
+		let path = [];
+
+		// Initialize distances
+		for (let station_id in graph) {
+			distances[station_id] = Infinity;
+		}
+		distances[start] = 0;
+
+		while (true) {
+			let shortestStation = null;
+
+			// Find the nearest station
+			for (let station_id in distances) {
+				if (graph[station_id] && !visited[station_id]) {
+					if (
+						shortestStation === null ||
+						distances[station_id] < distances[shortestStation]
+					) {
+						shortestStation = station_id;
+					}
+				}
+			}
+
+			if (shortestStation === null) {
+				break;
+			}
+
+			// Update distances to neighboring stations
+			for (let neighbor in graph[shortestStation]) {
+				let distance =
+					distances[shortestStation] +
+					graph[shortestStation][neighbor];
+				if (distance < distances[neighbor]) {
+					distances[neighbor] = distance;
+					visited[neighbor] = shortestStation;
+				}
+			}
+
+			visited[shortestStation] = true;
+		}
+
+		// Build path
+		let current = end;
+		while (current !== start) {
+			path.unshift(current);
+			current = visited[current];
+		}
+		path.unshift(start);
+
+		return { distance: distances[end], path };
 	},
 };

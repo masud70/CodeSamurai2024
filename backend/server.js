@@ -12,6 +12,7 @@ const {
 	getAllTrains,
 	getWalletBalance,
 	addWalletBalance,
+	purchaseTicket,
 } = require("./controllers");
 const app = express();
 
@@ -115,7 +116,9 @@ app.get("/api/stations/:id/trains", async (req, res) => {
 		const result = await getAllTrains({ station_id });
 		console.log(result);
 		if (result.status) {
-			res.status(200).json({ trains: result.data });
+			res.status(200).json(
+				result.data
+			);
 		} else {
 			throw new Error(result.message);
 		}
@@ -134,6 +137,24 @@ app.get("/api/wallets/:id", async (req, res) => {
 		console.log(result);
 		if (result.status) {
 			res.status(200).json({ trains: result.data });
+		} else {
+			throw new Error(result.message);
+		}
+	} catch (error) {
+		res.status(404).json({
+			message: error.message,
+		});
+	}
+});
+
+app.post("/api/tickets", async (req, res) => {
+	try {
+		const info = req.body;
+		console.log("Info: ", info);
+		const result = await purchaseTicket({ info });
+		console.log(result);
+		if (result.status) {
+			res.status(200).json({ result });
 		} else {
 			throw new Error(result.message);
 		}

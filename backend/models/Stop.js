@@ -2,6 +2,11 @@ module.exports = (sequelize, DataTypes) => {
 	const Stop = sequelize.define(
 		"Stop",
 		{
+			id: {
+				type: DataTypes.INTEGER,
+				autoIncrement: true,
+				primaryKey: true,
+			},
 			station_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
